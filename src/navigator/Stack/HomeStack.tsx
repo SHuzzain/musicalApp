@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../../screens/Home/HomeScreen';
 import PostDetailScreen from '../../screens/Home/PostDetailScreen';
+import {ROUTES} from '../../utils/constants';
 
 const Stack = createStackNavigator();
 
@@ -10,9 +11,10 @@ const HomeStack = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="PostDetail" component={PostDetailScreen} />
+      }}
+      initialRouteName={ROUTES.HOME}>
+      <Stack.Screen name={ROUTES.HOME} component={HomeScreen} />
+      <Stack.Screen name={ROUTES.GALLERY} component={PostDetailScreen} />
     </Stack.Navigator>
   );
 };

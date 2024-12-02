@@ -1,28 +1,33 @@
-import React from 'react';
-import {createStackNavigator} from '@react-navigation/stack';
+import React, {useEffect} from 'react';
 import AuthStack from './Stack/AuthStack';
-import MainTabNavigator from './Tab/MainTabNavigator';
 import {NavigationContainer} from '@react-navigation/native';
-import ProtectedRoute from '../common/ProtectedRoute';
-
-const Stack = createStackNavigator();
-
-const ProtectedMainTab = () => (
-  <ProtectedRoute>
-    <MainTabNavigator />
-  </ProtectedRoute>
-);
+import {useDispatch, useSelector} from 'react-redux';
+import {AppDispatch, RootState} from '../redux/store';
+import {restoreSession} from '../redux/actions/authActions';
+import MainTabNavigator from './Tab/MainTabNavigator';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 const AppNavigator = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const {isAuthenticated, loading} = useSelector(
+    (state: RootState) => state.auth,
+  );
+
+  useEffect(() => {
+    // Check user session on app launch
+    dispatch(restoreSession());
+  }, [dispatch]);
+
+  console.log({loading});
+
+  if (loading) {
+    // Show loading spinner or logo while checking auth
+    return <LoadingSpinner />;
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-        {/* with out login user  show this screens */}
-        <Stack.Screen name="AuthStack" component={AuthStack} />
-
-        {/*  with  login user  show this screens */}
-        <Stack.Screen name="MainScreen" component={ProtectedMainTab} />
-      </Stack.Navigator>
+      {isAuthenticated ? <MainTabNavigator /> : <AuthStack />}
     </NavigationContainer>
   );
 };

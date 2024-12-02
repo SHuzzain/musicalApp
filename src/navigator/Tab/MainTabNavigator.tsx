@@ -3,6 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import HomeStack from '../Stack/HomeStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ParamListBase, RouteProp} from '@react-navigation/native';
+import {COLOR, ROUTES} from '../../utils/constants';
 
 type tabBarIconsProps = {
   route: RouteProp<ParamListBase, string>;
@@ -21,13 +22,13 @@ const getTabBarIcon = (
   {focused, color, size}: tabBarIconsProps['props'],
 ) => {
   let iconName: string = 'help-circle-outline';
-
-  if (route.name === 'Home') {
+  console.log({route});
+  if (route.name === ROUTES.HOME_TAB) {
     iconName = focused ? 'home' : 'home-outline';
-  } else if (route.name === 'Profile') {
+  } else if (route.name === ROUTES.PROFILE_TAB) {
     iconName = focused ? 'person' : 'person-outline';
-  } else if (route.name === 'Bookmarks') {
-    iconName = focused ? 'bookmark' : 'bookmark-outline';
+  } else if (route.name === ROUTES.NEW_EVENT_TAB) {
+    iconName = focused ? 'add' : 'add-outline';
   }
 
   return <Ionicons name={iconName} size={size} color={color} />;
@@ -38,14 +39,36 @@ const MainTabNavigator = () => {
     <Tab.Navigator
       screenOptions={({route}) => ({
         headerShown: false,
-        tabBarIcon: props => getTabBarIcon(route, props), // Use the external function
-        tabBarActiveTintColor: '#6200EE',
+        tabBarIcon: props => getTabBarIcon(route, props),
+        tabBarActiveTintColor: COLOR.primary.default,
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
           backgroundColor: '#ffffff',
         },
       })}>
-      <Tab.Screen name="HomeTab" component={HomeStack} />
+      <Tab.Screen
+        name={ROUTES.HOME_TAB}
+        component={HomeStack}
+        options={{
+          tabBarLabel: ROUTES.HOME,
+        }}
+      />
+
+      <Tab.Screen
+        name={ROUTES.NEW_EVENT_TAB}
+        component={HomeStack}
+        options={{
+          tabBarLabel: ROUTES.NEW_EVENT,
+        }}
+      />
+
+      <Tab.Screen
+        name={ROUTES.PROFILE_TAB}
+        component={HomeStack}
+        options={{
+          tabBarLabel: ROUTES.PROFILE,
+        }}
+      />
     </Tab.Navigator>
   );
 };
