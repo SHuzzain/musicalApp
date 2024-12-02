@@ -7,6 +7,9 @@ export default {
   HOME_TAB: 'Home Tab',
   HOME_DRAWER: 'Home Drawer',
 
+  EVENT: 'Event',
+  EVENT_TAB: 'Event Tab',
+
   GALLERY: 'GALLERY',
   GALLERY_TAB: 'GALLERY Tab',
 

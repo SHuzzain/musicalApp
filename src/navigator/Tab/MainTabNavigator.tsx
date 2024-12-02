@@ -1,9 +1,15 @@
 import React from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBarButtonProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import HomeStack from '../Stack/HomeStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {ParamListBase, RouteProp} from '@react-navigation/native';
-import {COLOR, ROUTES} from '../../utils/constants';
+import {ROUTES} from '../../utils/constants';
+import {colors} from '../../styles/color';
+import EventFloatButtom from '../../components/Button/event-button';
+import EventStack from '../Stack/EventStack';
 
 type tabBarIconsProps = {
   route: RouteProp<ParamListBase, string>;
@@ -16,7 +22,6 @@ type tabBarIconsProps = {
 
 const Tab = createBottomTabNavigator();
 
-// Move the `tabBarIcon` function outside of the component
 const getTabBarIcon = (
   route: tabBarIconsProps['route'],
   {focused, color, size}: tabBarIconsProps['props'],
@@ -29,10 +34,15 @@ const getTabBarIcon = (
     iconName = focused ? 'person' : 'person-outline';
   } else if (route.name === ROUTES.NEW_EVENT_TAB) {
     iconName = focused ? 'add' : 'add-outline';
+    color = 'white';
   }
 
   return <Ionicons name={iconName} size={size} color={color} />;
 };
+
+const eventTab = (props: BottomTabBarButtonProps) => (
+  <EventFloatButtom children={props.children} onPress={props.onPress} />
+);
 
 const MainTabNavigator = () => {
   return (
@@ -40,8 +50,8 @@ const MainTabNavigator = () => {
       screenOptions={({route}) => ({
         headerShown: false,
         tabBarIcon: props => getTabBarIcon(route, props),
-        tabBarActiveTintColor: COLOR.primary.default,
-        tabBarInactiveTintColor: 'gray',
+        tabBarActiveTintColor: colors.primary,
+        tabBarShowLabel: false,
         tabBarStyle: {
           backgroundColor: '#ffffff',
         },
@@ -56,9 +66,10 @@ const MainTabNavigator = () => {
 
       <Tab.Screen
         name={ROUTES.NEW_EVENT_TAB}
-        component={HomeStack}
+        component={EventStack}
         options={{
           tabBarLabel: ROUTES.NEW_EVENT,
+          tabBarButton: eventTab,
         }}
       />
 
