@@ -2,7 +2,7 @@ import {ActivityIndicator, StyleSheet} from 'react-native';
 import React from 'react';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 
-const LoadingSpinner = ({}) => {
+const LoadingSpinner = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={[styles.container, styles.horizontal]}>
