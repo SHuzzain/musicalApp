@@ -1,25 +1,8 @@
 import React from 'react';
-import {
-  GestureResponderEvent,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {colors} from '../../styles/color';
 
-type EventFloatButtomProps = {
-  children: React.ReactNode;
-  onPress:
-    | (((event: GestureResponderEvent) => void) &
-        ((
-          e:
-            | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-            | GestureResponderEvent,
-        ) => void))
-    | undefined;
-};
-
-const EventFloatButtom = ({children, onPress}: EventFloatButtomProps) => {
+const EventFloatButtom = ({children, onPress}) => {
   return (
     <TouchableOpacity
       onPress={onPress}

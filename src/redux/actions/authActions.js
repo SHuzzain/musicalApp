@@ -1,14 +1,13 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createAsyncThunk} from '@reduxjs/toolkit';
+import {USER_TOKEN} from '../../utils/helpers/storage';
 
 // Login thunk
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
-  async (credentials: {email: string; password: string}) => {
+  async credentials => {
     try {
       const response = await fakeApiLogin(credentials);
-
-      await AsyncStorage.setItem('authToken', response.token);
+      await USER_TOKEN.set(response.token);
 
       // Dispatch success action
       return response.user;
@@ -18,13 +17,7 @@ export const loginUser = createAsyncThunk(
   },
 );
 
-async function fakeApiLogin(credentials: {
-  email: string;
-  password: string;
-}): Promise<{
-  token: string;
-  user: {id: string; name: string; email: string};
-}> {
+async function fakeApiLogin(credentials) {
   return new Promise(resolve =>
     setTimeout(
       () =>
@@ -41,7 +34,7 @@ export const restoreSession = createAsyncThunk(
   'auth/loginUser',
   async (_, {dispatch}) => {
     try {
-      const token = await AsyncStorage.getItem('authToken');
+      const token = await USER_TOKEN.get();
       console.log({token});
 
       if (token) {
@@ -57,18 +50,14 @@ export const restoreSession = createAsyncThunk(
 );
 
 // Simulate fetching user info (replace with actual API)
-async function fetchUserInfo(_token: string): Promise<{
-  id: string;
-  name: string;
-  email: string;
-}> {
+async function fetchUserInfo(_token) {
   return new Promise(resolve =>
     setTimeout(
       () =>
         resolve({
           id: '1',
-          name: 'John Doe',
-          email: 'john@example.com',
+          name: 'dummy',
+          email: 'dummy@example.com',
         }),
       1000,
     ),
@@ -78,7 +67,7 @@ async function fetchUserInfo(_token: string): Promise<{
 export const logoutThunk = createAsyncThunk(
   'auth/logout',
   async (_, {dispatch}) => {
-    await AsyncStorage.removeItem('authToken');
+    await USER_TOKEN.delete();
     dispatch({type: 'auth/logout'});
   },
 );

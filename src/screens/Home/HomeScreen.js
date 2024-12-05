@@ -3,10 +3,9 @@ import React from 'react';
 import Button from '../../components/Button/button';
 import {logoutThunk} from '../../redux/actions/authActions';
 import {useDispatch} from 'react-redux';
-import {AppDispatch} from '../../redux/store';
 
 const HomeScreen = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useDispatch();
 
   const handleLogOut = () => {
     dispatch(logoutThunk());

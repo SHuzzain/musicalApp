@@ -3,16 +3,10 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../redux/store';
 import {NavigationProp, useNavigation} from '@react-navigation/native';
 
-interface ProtectedRouteProps {
-  children: ReactNode;
-}
+const ProtectedRoute = ({children}) => {
+  const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({children}) => {
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated,
-  );
-  console.log({isAuthenticated});
-  const navigation = useNavigation<NavigationProp<any>>();
+  const navigation = useNavigation();
 
   useEffect(() => {
     if (!isAuthenticated) {

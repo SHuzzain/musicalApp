@@ -3,24 +3,19 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 
 import {useDispatch} from 'react-redux';
 
-import {AppDispatch} from '../../redux/store';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useForm, Controller} from 'react-hook-form';
 import {TextInput} from 'react-native-gesture-handler';
 import Button from '../../components/Button/button';
 import {loginUser} from '../../redux/actions/authActions';
 
 const LoginScreen = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const {handleSubmit, control} = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = data => {
     console.log(data);
     console.log('hi');
     dispatch(loginUser(data));

@@ -6,7 +6,7 @@ import store from './redux/store';
 import AppNavigator from './navigator/AppNavigator';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-const App: React.FC = () => {
+const App = () => {
   return (
     <GestureHandlerRootView style={styles.gesture}>
       <Provider store={store}>

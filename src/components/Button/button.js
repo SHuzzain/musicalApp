@@ -1,16 +1,8 @@
-import {StyleProp, StyleSheet, Text, TextStyle} from 'react-native';
+import {StyleSheet, Text} from 'react-native';
 import React from 'react';
-import {
-  TouchableOpacity,
-  TouchableOpacityProps,
-} from 'react-native-gesture-handler';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
-type Props = TouchableOpacityProps & {
-  textStyle?: StyleProp<TextStyle>;
-  title: string;
-};
-
-const Button: React.FC<Props> = props => {
+const Button = props => {
   const {textStyle, title = 'Button', ...rest} = props;
   return (
     <TouchableOpacity

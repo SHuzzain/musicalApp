@@ -1,24 +1,19 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {useDispatch} from 'react-redux';
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {Controller, useForm} from 'react-hook-form';
-import {loginSuccess} from '../../redux/reducers/authSlice';
-import {AppDispatch} from '../../redux/store';
+import {loginSuccess} from '../../redux/slice/authSlice';
 import {TextInput} from 'react-native-gesture-handler';
 import Button from '../../components/Button/button';
 
 const RegisterScreen = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigation: NavigationProp<ParamListBase> = useNavigation();
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   const {handleSubmit, control} = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = data => {
     console.log(data);
     console.log('hi');
     const user = {id: '1', name: 'John Doe', email: 'john@example.com'};

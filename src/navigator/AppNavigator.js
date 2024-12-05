@@ -8,10 +8,8 @@ import MainTabNavigator from './Tab/MainTabNavigator';
 import LoadingSpinner from '../common/LoadingSpinner';
 
 const AppNavigator = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const {isAuthenticated, loading} = useSelector(
-    (state: RootState) => state.auth,
-  );
+  const dispatch = useDispatch();
+  const {isAuthenticated, loading} = useSelector(state => state.auth);
 
   useEffect(() => {
     // Check user session on app launch

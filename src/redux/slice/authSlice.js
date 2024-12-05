@@ -1,21 +1,7 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {RootState} from '../store';
+import {createSlice} from '@reduxjs/toolkit';
 import {loginUser} from '../actions/authActions';
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
-  loading: boolean;
-  error: string | null;
-}
-
-const initialState: AuthState = {
+const initialState = {
   isAuthenticated: false,
   user: null,
   loading: true,
@@ -26,7 +12,7 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    loginSuccess: (state, action: PayloadAction<User>) => {
+    loginSuccess: (state, action) => {
       state.isAuthenticated = true;
       state.user = action.payload;
       state.loading = false;
@@ -45,7 +31,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.isAuthenticated = true;
-        state.user = action.payload!;
+        state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
@@ -55,6 +41,6 @@ const authSlice = createSlice({
 });
 
 export const {loginSuccess, logout} = authSlice.actions;
-export const getAuth = (state: RootState) => state.auth;
+export const getAuth = state => state.auth;
 
 export default authSlice.reducer;

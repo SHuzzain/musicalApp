@@ -11,23 +11,11 @@ import {colors} from '../../styles/color';
 import EventFloatButtom from '../../components/Button/event-button';
 import EventStack from '../Stack/EventStack';
 
-type tabBarIconsProps = {
-  route: RouteProp<ParamListBase, string>;
-  props: {
-    focused: boolean;
-    color: string;
-    size: number;
-  };
-};
-
 const Tab = createBottomTabNavigator();
 
-const getTabBarIcon = (
-  route: tabBarIconsProps['route'],
-  {focused, color, size}: tabBarIconsProps['props'],
-) => {
-  let iconName: string = 'help-circle-outline';
-  console.log({route});
+const getTabBarIcon = (route, {focused, color, size}) => {
+  let iconName = 'help-circle-outline';
+
   if (route.name === ROUTES.HOME_TAB) {
     iconName = focused ? 'home' : 'home-outline';
   } else if (route.name === ROUTES.PROFILE_TAB) {
@@ -40,7 +28,7 @@ const getTabBarIcon = (
   return <Ionicons name={iconName} size={size} color={color} />;
 };
 
-const eventTab = (props: BottomTabBarButtonProps) => (
+const eventTab = props => (
   <EventFloatButtom children={props.children} onPress={props.onPress} />
 );
 
