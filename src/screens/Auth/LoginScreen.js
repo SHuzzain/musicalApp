@@ -1,19 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import {useNavigation} from '@react-navigation/native';
-import {useForm, Controller} from 'react-hook-form';
-import {TextInput} from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { useForm, Controller } from 'react-hook-form';
+import { TextInput } from 'react-native-gesture-handler';
 import Button from '../../components/Button/button';
-import {loginUser} from '../../redux/actions/authActions';
+import { loginUser } from '../../redux/actions/authActions';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  const {handleSubmit, control} = useForm();
+  const { handleSubmit, control } = useForm();
 
   const onSubmit = data => {
     console.log(data);
@@ -35,8 +35,9 @@ const LoginScreen = () => {
         <Text style={styles.label}>Email</Text>
         <Controller
           control={control}
-          render={({field: {onChange, onBlur, value}}) => (
+          render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
+              keyboardType="email-address"
               style={styles.input}
               cursorColor={'#616163'}
               onBlur={onBlur}
@@ -44,13 +45,13 @@ const LoginScreen = () => {
               value={value}
             />
           )}
-          name="email"
-          rules={{required: true}}
+          name="username"
+          rules={{ required: true }}
         />
         <Text style={styles.label}>Password</Text>
         <Controller
           control={control}
-          render={({field: {onChange, onBlur, value}}) => (
+          render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={styles.input}
               cursorColor={'#616163'}
@@ -60,7 +61,7 @@ const LoginScreen = () => {
             />
           )}
           name="password"
-          rules={{required: true}}
+          rules={{ required: true }}
         />
 
         <Button

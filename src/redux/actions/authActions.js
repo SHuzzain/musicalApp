@@ -1,13 +1,16 @@
-import {createAsyncThunk} from '@reduxjs/toolkit';
-import {USER_TOKEN} from '../../utils/helpers/storage';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { USER_TOKEN } from '../../utils/helpers/storage';
+import axios from 'axios';
+import { ENDPOINTS } from '../../utils/api/apiEndpoints';
+import { loginSuccess } from '../slice/authSlice';
 
 // Login thunk
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async credentials => {
     try {
-      const response = await fakeApiLogin(credentials);
-      await USER_TOKEN.set(response.token);
+      const response = await axios.post(ENDPOINTS.login, credentials);
+      // await USER_TOKEN.set(response.token);
 
       // Dispatch success action
       return response.user;
@@ -17,25 +20,28 @@ export const loginUser = createAsyncThunk(
   },
 );
 
-async function fakeApiLogin(credentials) {
-  return new Promise(resolve =>
-    setTimeout(
-      () =>
-        resolve({
-          token: 'dummy-token',
-          user: {id: '1', name: 'John Doe', email: credentials.email},
-        }),
-      1000,
-    ),
-  );
-}
+
+
+
+// async function fakeApiLogin(credentials) {
+//   return new Promise(resolve =>
+//     setTimeout(
+//       () =>
+//         resolve({
+//           token: 'dummy-token',
+//           user: { id: '1', name: 'John Doe', email: credentials.email },
+//         }),
+//       1000,
+//     ),
+//   );
+// }
 
 export const restoreSession = createAsyncThunk(
   'auth/loginUser',
-  async (_, {dispatch}) => {
+  async (_, { dispatch }) => {
     try {
       const token = await USER_TOKEN.get();
-      console.log({token});
+      console.log({ token });
 
       if (token) {
         const user = await fetchUserInfo(token);
@@ -66,8 +72,8 @@ async function fetchUserInfo(_token) {
 
 export const logoutThunk = createAsyncThunk(
   'auth/logout',
-  async (_, {dispatch}) => {
+  async (_, { dispatch }) => {
     await USER_TOKEN.delete();
-    dispatch({type: 'auth/logout'});
+    dispatch({ type: 'auth/logout' });
   },
 );
