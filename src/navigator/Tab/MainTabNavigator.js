@@ -1,28 +1,30 @@
 import React from 'react';
 import {
-  BottomTabBarButtonProps,
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import HomeStack from '../Stack/HomeStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {ParamListBase, RouteProp} from '@react-navigation/native';
-import {ROUTES} from '../../utils/constants';
-import {colors} from '../../styles/color';
+import { ROUTES } from '../../utils/constants';
+import { colors } from '../../styles/color';
 import EventFloatButtom from '../../components/Button/event-button';
 import EventStack from '../Stack/EventStack';
+import RegisterScreen from '../../screens/Register/RegisterScreen';
 
 const Tab = createBottomTabNavigator();
 
-const getTabBarIcon = (route, {focused, color, size}) => {
+const getTabBarIcon = (route, { focused, color, size }) => {
   let iconName = 'help-circle-outline';
-
   if (route.name === ROUTES.HOME_TAB) {
     iconName = focused ? 'home' : 'home-outline';
-  } else if (route.name === ROUTES.PROFILE_TAB) {
-    iconName = focused ? 'person' : 'person-outline';
+  } else if (route.name === ROUTES.Register_TAB) {
+    iconName = focused ? 'journal' : 'journal-outline';
   } else if (route.name === ROUTES.NEW_EVENT_TAB) {
     iconName = focused ? 'add' : 'add-outline';
     color = 'white';
+  } else if (route.name === ROUTES.GALLERY_TAB) {
+    iconName = focused ? 'image' : 'image-outline';
+  } else if (route.name === ROUTES.PROFILE_TAB) {
+    iconName = focused ? 'person' : 'person-outline';
   }
 
   return <Ionicons name={iconName} size={size} color={color} />;
@@ -35,7 +37,7 @@ const eventTab = props => (
 const MainTabNavigator = () => {
   return (
     <Tab.Navigator
-      screenOptions={({route}) => ({
+      screenOptions={({ route }) => ({
         headerShown: false,
         tabBarIcon: props => getTabBarIcon(route, props),
         tabBarActiveTintColor: colors.primary,
@@ -53,11 +55,27 @@ const MainTabNavigator = () => {
       />
 
       <Tab.Screen
+        name={ROUTES.Register_TAB}
+        component={RegisterScreen}
+        options={{
+          tabBarLabel: ROUTES.REGISTER,
+        }}
+      />
+
+      <Tab.Screen
         name={ROUTES.NEW_EVENT_TAB}
         component={EventStack}
         options={{
           tabBarLabel: ROUTES.NEW_EVENT,
           tabBarButton: eventTab,
+        }}
+      />
+
+      <Tab.Screen
+        name={ROUTES.GALLERY_TAB}
+        component={HomeStack}
+        options={{
+          tabBarLabel: ROUTES.GALLERY,
         }}
       />
 
@@ -68,6 +86,8 @@ const MainTabNavigator = () => {
           tabBarLabel: ROUTES.PROFILE,
         }}
       />
+
+
     </Tab.Navigator>
   );
 };

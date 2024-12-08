@@ -11,7 +11,7 @@ const AppNavigator = () => {
   const { isAuthenticated, loading } = useSelector(state => state.auth);
 
   useEffect(() => {
-    // Check user session on app launch
+
     dispatch(restoreSession());
   }, [dispatch]);
 

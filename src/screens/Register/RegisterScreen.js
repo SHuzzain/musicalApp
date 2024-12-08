@@ -1,26 +1,26 @@
 import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigation } from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import Button from '../../components/Button/button';
 
 import { TextInput, ScrollView } from 'react-native-gesture-handler';
-import { loginSuccess } from '../../redux/slice/authSlice';
-import axios from 'axios';
-import { ENDPOINTS } from '../../utils/api/apiEndpoints';
+import { registerEvent } from '../../redux/actions/registerAction';
+import { getRegisterData } from '../../redux/slice/registerSlice';
 
 const RegisterScreen = () => {
+  const registerData = useSelector(getRegisterData);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
-  const { handleSubmit, control } = useForm();
+  const { handleSubmit, control } = useForm({
+    defaultValues: registerData,
+  });
 
   const onSubmit = async (data) => {
-    const response = await axios.post(ENDPOINTS.register, data)
-    dispatch(loginSuccess(response.user));
+    // const response = await axios.post(ENDPOINTS.register, data);
+    dispatch(registerEvent(data));
   };
-
+  console.log({ registerData });
   return (
     <>
 
@@ -55,7 +55,7 @@ const RegisterScreen = () => {
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
               <TextInput
-                keyboardType="decimal-pad"
+                keyboardType="numeric"
                 style={styles.input}
                 cursorColor={'#616163'}
                 onBlur={onBlur}
@@ -135,18 +135,9 @@ const RegisterScreen = () => {
           <Button
             style={styles.button}
             textStyle={styles.buttonText}
-            title="Sign Up"
+            title="Register"
             onPress={handleSubmit(onSubmit)}
           />
-
-          <Text style={styles.newUser}>
-            already have account?{' '}
-            <Text
-              style={styles.createUser}
-              onPress={() => navigation.navigate('Login')}>
-              Login In
-            </Text>
-          </Text>
         </View>
       </ScrollView>
     </>

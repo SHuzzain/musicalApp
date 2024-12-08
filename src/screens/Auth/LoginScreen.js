@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 
 import { useDispatch } from 'react-redux';
 
-import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../../components/Button/button';
@@ -11,13 +10,10 @@ import { loginUser } from '../../redux/actions/authActions';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
 
   const { handleSubmit, control } = useForm();
 
   const onSubmit = data => {
-    console.log(data);
-    console.log('hi');
     dispatch(loginUser(data));
   };
 
@@ -32,7 +28,7 @@ const LoginScreen = () => {
       </View>
 
       <View style={styles.formContainer}>
-        <Text style={styles.label}>Email</Text>
+        <Text style={styles.label}>User Name</Text>
         <Controller
           control={control}
           render={({ field: { onChange, onBlur, value } }) => (
@@ -54,7 +50,8 @@ const LoginScreen = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               style={styles.input}
-              cursorColor={'#616163'}
+              secureTextEntry
+
               onBlur={onBlur}
               onChangeText={textValue => onChange(textValue)}
               value={value}
@@ -71,14 +68,14 @@ const LoginScreen = () => {
           onPress={handleSubmit(onSubmit)}
         />
 
-        <Text style={styles.newUser}>
+        {/* <Text style={styles.newUser}>
           New User?{' '}
           <Text
             style={styles.createUser}
             onPress={() => navigation.navigate('Register')}>
             Create an account
           </Text>
-        </Text>
+        </Text> */}
       </View>
     </View>
   );
@@ -131,6 +128,7 @@ const styles = StyleSheet.create({
     height: 40,
     padding: 10,
     borderRadius: 8,
+    color: 'black',
   },
   newUser: {
     textAlign: 'center',

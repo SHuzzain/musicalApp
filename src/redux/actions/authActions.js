@@ -2,39 +2,23 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { USER_TOKEN } from '../../utils/helpers/storage';
 import axios from 'axios';
 import { ENDPOINTS } from '../../utils/api/apiEndpoints';
-import { loginSuccess } from '../slice/authSlice';
 
 // Login thunk
 export const loginUser = createAsyncThunk(
   'auth/loginUser',
   async credentials => {
     try {
-      const response = await axios.post(ENDPOINTS.login, credentials);
+      // const response = await axios.post(ENDPOINTS.login, credentials);
       // await USER_TOKEN.set(response.token);
 
       // Dispatch success action
-      return response.user;
+      return credentials;
     } catch (error) {
       throw new Error('Login failed');
     }
   },
 );
 
-
-
-
-// async function fakeApiLogin(credentials) {
-//   return new Promise(resolve =>
-//     setTimeout(
-//       () =>
-//         resolve({
-//           token: 'dummy-token',
-//           user: { id: '1', name: 'John Doe', email: credentials.email },
-//         }),
-//       1000,
-//     ),
-//   );
-// }
 
 export const restoreSession = createAsyncThunk(
   'auth/loginUser',
