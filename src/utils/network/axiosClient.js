@@ -1,6 +1,6 @@
 import axios from 'axios';
-import {USER_TOKEN} from '../helpers/storage';
-import {API_BASE_URL} from '../api/apiEndpoints';
+import { USER_TOKEN } from '../helpers/storage';
+import { API_BASE_URL } from '../api/apiEndpoints';
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
@@ -34,4 +34,4 @@ apiClient.interceptors.response.use(
   },
 );
 
-export {apiClient};
+export { apiClient };

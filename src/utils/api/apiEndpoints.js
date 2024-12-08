@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:8081';
+export const API_BASE_URL = 'http://192.168.207.96::3000/api';
 
 export const ENDPOINTS = {
   login: '/auth/login',
