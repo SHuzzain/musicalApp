@@ -9,12 +9,12 @@ export const loginUser = createAsyncThunk(
   async credentials => {
     try {
       console.log({ credentials });
-      const response = await axios.post(ENDPOINTS.login, credentials);
+      // const response = await axios.post(ENDPOINTS.login, credentials);
 
       // await USER_TOKEN.set(response.token);
-      console.log({ credentials, response });
+      // console.log({ credentials, response });
       // Dispatch success action
-      return response.user;
+      return credentials;
     } catch (error) {
       console.log({ error });
       throw new Error('Login failed');

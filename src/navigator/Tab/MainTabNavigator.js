@@ -2,13 +2,14 @@ import React from 'react';
 import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
-import HomeStack from '../Stack/HomeStack';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ROUTES } from '../../utils/constants';
 import { colors } from '../../styles/color';
 import EventFloatButtom from '../../components/Button/event-button';
-import EventStack from '../Stack/EventStack';
 import RegisterScreen from '../../screens/Register/RegisterScreen';
+import EventScreen from '../../screens/Event/EventScreen';
+import HomeScreen from '../../screens/Home/HomeScreen';
+import GalleryScreen from '../../screens/Gallery/GalleryScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -48,7 +49,7 @@ const MainTabNavigator = () => {
       })}>
       <Tab.Screen
         name={ROUTES.HOME_TAB}
-        component={HomeStack}
+        component={HomeScreen}
         options={{
           tabBarLabel: ROUTES.HOME,
         }}
@@ -64,7 +65,7 @@ const MainTabNavigator = () => {
 
       <Tab.Screen
         name={ROUTES.NEW_EVENT_TAB}
-        component={EventStack}
+        component={EventScreen}
         options={{
           tabBarLabel: ROUTES.NEW_EVENT,
           tabBarButton: eventTab,
@@ -73,7 +74,7 @@ const MainTabNavigator = () => {
 
       <Tab.Screen
         name={ROUTES.GALLERY_TAB}
-        component={HomeStack}
+        component={GalleryScreen}
         options={{
           tabBarLabel: ROUTES.GALLERY,
         }}
@@ -81,7 +82,7 @@ const MainTabNavigator = () => {
 
       <Tab.Screen
         name={ROUTES.PROFILE_TAB}
-        component={HomeStack}
+        component={HomeScreen}
         options={{
           tabBarLabel: ROUTES.PROFILE,
         }}

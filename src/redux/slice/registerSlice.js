@@ -16,10 +16,18 @@ const registerSlice = createSlice({
             state.register = action.payload;
             state.loading = false;
         },
+        registerUpdate: (state, action) => {
+            state.register = {
+                ...state.register,
+                ...action.payload,
+            };
+            state.loading = false;
+        },
         clearRegister: state => {
             state.isAuthenticated = false;
             state.register = null;
         },
+
     },
     extraReducers: builder => {
         builder

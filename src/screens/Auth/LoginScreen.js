@@ -7,8 +7,10 @@ import { useForm, Controller } from 'react-hook-form';
 import { TextInput } from 'react-native-gesture-handler';
 import Button from '../../components/Button/button';
 import { loginUser } from '../../redux/actions/authActions';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const { handleSubmit, control } = useForm();
@@ -68,14 +70,16 @@ const LoginScreen = () => {
           onPress={handleSubmit(onSubmit)}
         />
 
-        {/* <Text style={styles.newUser}>
+        <Text style={styles.newUser}>
           New User?{' '}
           <Text
             style={styles.createUser}
-            onPress={() => navigation.navigate('Register')}>
+            onPress={() => navigation.navigate('Register', {
+              isNew: true,
+            })}>
             Create an account
           </Text>
-        </Text> */}
+        </Text>
       </View>
     </View>
   );

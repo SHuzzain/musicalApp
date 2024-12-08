@@ -8,8 +8,9 @@ import { TextInput, ScrollView } from 'react-native-gesture-handler';
 import { registerEvent } from '../../redux/actions/registerAction';
 import { getRegisterData } from '../../redux/slice/registerSlice';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ route }) => {
   const registerData = useSelector(getRegisterData);
+  const { params } = route;
   const dispatch = useDispatch();
 
   const { handleSubmit, control } = useForm({
@@ -17,6 +18,7 @@ const RegisterScreen = () => {
   });
 
   const onSubmit = async (data) => {
+
     // const response = await axios.post(ENDPOINTS.register, data);
     dispatch(registerEvent(data));
   };
@@ -25,16 +27,8 @@ const RegisterScreen = () => {
     <>
 
       <ScrollView style={styles.container}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('../../assets/images/login-bg.png')}
-            style={styles.image}
-            resizeMode="contain"
-          />
-        </View>
-
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Name</Text>
+          <Text style={styles.label}>User Name</Text>
           <Controller
             control={control}
             render={({ field: { onChange, onBlur, value } }) => (
@@ -46,9 +40,34 @@ const RegisterScreen = () => {
                 value={value}
               />
             )}
-            name="name"
+            name="username"
             rules={{ required: true }}
           />
+
+          {params?.isNew &&
+            <>
+
+
+
+              <Text style={styles.label}>Password</Text>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    style={styles.input}
+                    cursorColor={'#616163'}
+                    onBlur={onBlur}
+                    onChangeText={textValue => onChange(textValue)}
+                    value={value}
+                  />
+                )}
+                name="name"
+                rules={{ required: true }}
+              />
+            </>
+
+          }
+
 
           <Text style={styles.label}>Contact</Text>
           <Controller
@@ -63,7 +82,7 @@ const RegisterScreen = () => {
                 value={value}
               />
             )}
-            name="contact"
+            name="contactNumber"
             rules={{ required: true }}
           />
           <Text style={styles.label}>brand performance</Text>
@@ -135,7 +154,7 @@ const RegisterScreen = () => {
           <Button
             style={styles.button}
             textStyle={styles.buttonText}
-            title="Register"
+            title={params?.isNew ? 'Register' : 'Update'}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
@@ -151,15 +170,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5,
     gap: 40,
-  },
-  imageContainer: {
-    flex: 0.4,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  image: {
-    height: '100%',
-    width: '100%',
   },
 
   label: {
@@ -184,6 +194,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     gap: 10,
     padding: 8,
+    justifyContent: 'center',
   },
   input: {
     borderWidth: 1.8,
