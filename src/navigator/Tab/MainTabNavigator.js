@@ -6,7 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ROUTES } from '../../utils/constants';
 import { colors } from '../../styles/color';
 import EventFloatButtom from '../../components/Button/event-button';
-import RegisterScreen from '../../screens/Register/RegisterScreen';
+import RegisterScreen from '../../screens/Auth/RegisterScreen';
 import EventScreen from '../../screens/Event/EventScreen';
 import HomeScreen from '../../screens/Home/HomeScreen';
 import GalleryScreen from '../../screens/Gallery/GalleryScreen';

@@ -2,15 +2,16 @@ import axios from 'axios';
 import { USER_TOKEN } from '../helpers/storage';
 import { API_BASE_URL } from '../api/apiEndpoints';
 
-const apiClient = axios.create({
+const axiosClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
+    Accept: 'application/json',
     'Content-Type': 'application/json',
   },
 });
 
 // Request Interceptor
-apiClient.interceptors.request.use(
+axiosClient.interceptors.request.use(
   config => {
     let token;
     USER_TOKEN.get().then(value => {
@@ -25,8 +26,8 @@ apiClient.interceptors.request.use(
 );
 
 // Response Interceptor
-apiClient.interceptors.response.use(
-  response => response,
+axiosClient.interceptors.response.use(
+  response => response.data,
   error => {
     // Handle global errors here
     console.error('API Error:', error.response);
@@ -34,4 +35,4 @@ apiClient.interceptors.response.use(
   },
 );
 
-export { apiClient };
+export { axiosClient };

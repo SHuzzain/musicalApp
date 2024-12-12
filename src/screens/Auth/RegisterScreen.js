@@ -1,28 +1,40 @@
-import { Image, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { TextInput, ScrollView } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import { Controller, useForm } from 'react-hook-form';
 import Button from '../../components/Button/button';
 
-import { TextInput, ScrollView } from 'react-native-gesture-handler';
-import { registerEvent } from '../../redux/actions/registerAction';
-import { getRegisterData } from '../../redux/slice/registerSlice';
+import { USER_TOKEN } from '../../utils/helpers/storage';
+import { getAuth, loginSuccess } from '../../redux/slice/authSlice';
+import authApi from '../../utils/api/AuthApi';
 
 const RegisterScreen = ({ route }) => {
-  const registerData = useSelector(getRegisterData);
+  const user = useSelector(getAuth);
   const { params } = route;
   const dispatch = useDispatch();
 
   const { handleSubmit, control } = useForm({
-    defaultValues: registerData,
+    defaultValues: user,
   });
 
-  const onSubmit = async (data) => {
+  console.log({ user });
 
-    // const response = await axios.post(ENDPOINTS.register, data);
-    dispatch(registerEvent(data));
+  const onSubmit = async (data) => {
+    try {
+      let response = {};
+      if (params?.newUser) {
+        response = await authApi.create(data);
+        await USER_TOKEN.set(JSON.stringify({ username: data.username, password: data.password }));
+      } else {
+        response = await authApi.updateById(user.id, data);
+      }
+      dispatch(loginSuccess(response.user));
+    } catch (error) {
+      console.log({ error });
+    }
+
   };
-  console.log({ registerData });
   return (
     <>
 
@@ -61,7 +73,7 @@ const RegisterScreen = ({ route }) => {
                     value={value}
                   />
                 )}
-                name="name"
+                name="password"
                 rules={{ required: true }}
               />
             </>

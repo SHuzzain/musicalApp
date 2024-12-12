@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { USER_TOKEN } from '../../utils/helpers/storage';
-import axios from 'axios';
 import { ENDPOINTS } from '../../utils/api/apiEndpoints';
+import { axiosClient } from '../../utils/network/axiosClient';
 
 // Login thunk
 export const loginUser = createAsyncThunk(
@@ -9,12 +9,12 @@ export const loginUser = createAsyncThunk(
   async credentials => {
     try {
       console.log({ credentials });
-      // const response = await axios.post(ENDPOINTS.login, credentials);
+      const response = await axiosClient.post(ENDPOINTS.login, credentials);
 
-      // await USER_TOKEN.set(response.token);
-      // console.log({ credentials, response });
-      // Dispatch success action
-      return credentials;
+      console.log({ response });
+
+      await USER_TOKEN.set(JSON.stringify(credentials));
+      return response.user;
     } catch (error) {
       console.log({ error });
       throw new Error('Login failed');
@@ -27,12 +27,12 @@ export const restoreSession = createAsyncThunk(
   'auth/loginUser',
   async (_, { dispatch }) => {
     try {
-      const token = await USER_TOKEN.get();
-      console.log({ token });
+      const data = await USER_TOKEN.get();
+      const credentials = JSON.parse(data);
+      console.log({ credentials });
+      if (credentials?.email) {
+        loginUser(credentials);
 
-      if (token) {
-        const user = await fetchUserInfo(token);
-        return user;
       } else {
         throw new Error('No token found');
       }
@@ -41,21 +41,6 @@ export const restoreSession = createAsyncThunk(
     }
   },
 );
-
-// Simulate fetching user info (replace with actual API)
-async function fetchUserInfo(_token) {
-  return new Promise(resolve =>
-    setTimeout(
-      () =>
-        resolve({
-          id: '1',
-          name: 'dummy',
-          email: 'dummy@example.com',
-        }),
-      1000,
-    ),
-  );
-}
 
 export const logoutThunk = createAsyncThunk(
   'auth/logout',

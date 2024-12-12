@@ -7,6 +7,7 @@ import CustomInput from '../../components/Input/CustomInput';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
+import Button from '../../components/Button/button';
 
 const EventScreen = () => {
     const [imageData, setImageData] = useState(null);
@@ -28,6 +29,10 @@ const EventScreen = () => {
             }
         });
     };
+
+    const onSubmit = () => {
+
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -85,7 +90,12 @@ const EventScreen = () => {
                         rules={{ required: true }}
                     />
 
-
+                    <Button
+                        style={styles.button}
+                        textStyle={styles.buttonText}
+                        title="Login"
+                        onPress={form.handleSubmit(onSubmit)}
+                    />
                 </View>
             </FormProvider>
         </ScrollView>
@@ -144,5 +154,12 @@ const styles = StyleSheet.create({
         height: 40,
         padding: 10,
         borderRadius: 8,
+    },
+    button: {
+        height: 40,
+        marginTop: 20,
+        backgroundColor: '#6e3cd3',
+        borderRadius: 4,
+        alignItems: 'center',
     },
 });
