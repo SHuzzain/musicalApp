@@ -6,15 +6,16 @@ import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { colors } from '../../styles/color';
 import authApi from '../../utils/api/AuthApi';
-import { useForm } from 'react-hook-form';
 
 const SearchBox = ({ handleFilter }) => {
-    const form = useForm();
     const [startDate, setStartDate] = useState(null);
     const [endDate, setEndDate] = useState(null);
     const [selected, setSelected] = useState('');
+    // const [searchTerm, setSearchTerm] = useState('');
 
-    const [users, setUsers] = useState([])
+    // const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+    const [users, setUsers] = useState([]);
 
     const [openStartDate, setOpenStartDate] = useState(false);
     const [openEndDate, setOpenEndDate] = useState(false);
@@ -24,6 +25,13 @@ const SearchBox = ({ handleFilter }) => {
         fetchUSers();
         return () => setUsers([]);
     }, []);
+
+    // useEffect(() => {
+    //     if (debouncedSearchTerm) {
+
+    //         console.log({ debouncedSearchTerm });
+    //     }
+    // }, [debouncedSearchTerm, handleFilter]);
 
     const fetchUSers = async () => {
         let response = await authApi.getAllUsers();
@@ -48,6 +56,8 @@ const SearchBox = ({ handleFilter }) => {
 
     const clearStartDate = () => setStartDate(null);
     const clearEndDate = () => setEndDate(null);
+    const clearSelect = () => setSelected(null);
+
 
     const renderItem = item => {
         return (
@@ -75,6 +85,7 @@ const SearchBox = ({ handleFilter }) => {
                     placeholder="Search"
                     placeholderTextColor="#909090"
                     style={styles.input}
+                    onChangeText={(value) => handleFilter({ name: value })}
                 />
                 <TouchableOpacity onPress={toggleModal}>
                     <Ionic name="filter" size={24} color="#6e3cd3" />
@@ -102,6 +113,19 @@ const SearchBox = ({ handleFilter }) => {
                             valueField="value"
                             placeholder="Select..."
                             value={selected}
+                            renderRightIcon={() => (
+                                <View style={styles.selectedIcon}>
+                                    {selected && <TouchableOpacity onPress={clearSelect}>
+                                        <Ionic name="close-circle" size={20} color={'#333'} />
+                                    </TouchableOpacity>}
+                                    <AntDesign
+                                        style={styles.icon}
+                                        color="black"
+                                        name="down"
+                                        size={13}
+                                    />
+                                </View>
+                            )}
                             onChange={item => {
                                 setSelected(item.value);
                             }}
@@ -233,6 +257,11 @@ const styles = StyleSheet.create({
     dropdownButtonText: {
         fontSize: 15,
         color: '#000',
+    },
+    selectedIcon: {
+        flexDirection: 'row',
+        gap: 8,
+        alignItems: 'center',
     },
     dateButton: {
         backgroundColor: '#EBEBEB',
