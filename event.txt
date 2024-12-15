@@ -1,0 +1,44 @@
+exports.getAllEvents = async (req, res) => {
+    try {
+        const { startDate, endDate, username, name } = req.query;
+
+        console.log({ p: req.query })
+
+        const where = {};
+
+        if (startDate && endDate) {
+            where.eventDate = {
+                [Op.between]: [new Date(startDate), new Date(endDate)],
+            };
+        } else if (startDate) {
+            where.eventDate = {
+                [Op.gte]: new Date(startDate),
+            };
+        } else if (endDate) {
+            where.eventDate = {
+                [Op.lte]: new Date(endDate),
+            };
+        }
+
+
+        if (username) {
+            where.username = {
+                [Op.like]: `%${username}%`,
+            };
+        }
+        if (name && name.trim() !== '') {
+            where.eventName = {
+                [Op.like]: `%${name}%`
+            };
+        }
+
+        const events = await Event.findAll({
+            where,
+        });
+
+        res.status(200).json(events);
+    } catch (error) {
+        console.log(error, 'event filter')
+        res.status(500).json({ message: 'Error fetching events', error });
+    }
+};
