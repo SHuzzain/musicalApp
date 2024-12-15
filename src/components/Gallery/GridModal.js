@@ -2,33 +2,60 @@ import { Image, Linking, Modal, StyleSheet, TouchableOpacity, View } from 'react
 import React from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import AntDesignIcon from 'react-native-vector-icons/AntDesign';
+import { IMAGE_API_BASE_URL } from '../../utils/api/apiEndpoints';
+import { useNavigation } from '@react-navigation/native';
+import { ROUTES } from '../../utils/constants';
+import { getAuth } from '../../redux/slice/authSlice';
+import { useSelector } from 'react-redux';
 
-const GridModal = ({ modalVisible, closeModal, selectedImage }) => {
+const GridModal = ({ modalVisible, closeModal, selectedItem, openDeleteModal }) => {
+    const user = useSelector(getAuth);
+
+    const navigation = useNavigation();
+
+    const handleEdit = () => {
+        closeModal('MODAL');
+        navigation.navigate(ROUTES.NEW_EVENT_TAB, { ...selectedItem, newEvent: false });
+    };
+
+    const handleDelete = () => {
+        openDeleteModal(selectedItem?.eventId);
+        closeModal('MODAL');
+    };
+
     return (
         <Modal
             visible={modalVisible}
             transparent={true}
             animationType="fade"
-            onRequestClose={closeModal}
+            onRequestClose={() => closeModal('MODAL')}
         >
             <View style={styles.modalBackground}>
                 <View style={styles.actionContainer}>
                     <View style={styles.action}>
-                        <TouchableOpacity>
-                            <FeatherIcon name="edit" color={'white'} size={24} />
-                        </TouchableOpacity>
+                        {user?.username === selectedItem?.username && <>
+                            <TouchableOpacity onPress={handleEdit}>
+                                <FeatherIcon name="edit" color={'white'} size={24} />
+                            </TouchableOpacity>
 
-                        <TouchableOpacity onPress={() => Linking.openURL('https://youtu.be/7u5AoFTgQTs?si=tbL9Fv2QdR9edgm1')}>
+                            <TouchableOpacity onPress={handleDelete}>
+                                <AntDesignIcon name="delete" color={'white'} size={24} />
+                            </TouchableOpacity>
+                        </>
+                        }
+
+                        <TouchableOpacity onPress={() => Linking.openURL(selectedItem?.eventUrl)}>
                             <FeatherIcon name="youtube" color={'white'} size={28} />
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity onPress={closeModal} >
+                    <TouchableOpacity onPress={() => closeModal('MODAL')} >
                         <Icon name="close" color={'white'} size={24} />
                     </TouchableOpacity>
                 </View>
 
-                <Image source={{ uri: selectedImage }} style={styles.modalImage} />
+                <Image source={{ uri: IMAGE_API_BASE_URL.concat(selectedItem?.imagePath) }} style={styles.modalImage} />
 
 
             </View>

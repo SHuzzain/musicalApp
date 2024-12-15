@@ -23,6 +23,7 @@
     "react-hook-form": "^7.53.2",
     "react-native": "0.76.0",
     "react-native-date-picker": "^5.0.7",
+    "react-native-element-dropdown": "^2.12.2",
     "react-native-gesture-handler": "^2.21.2",
     "react-native-image-picker": "^7.2.2",
     "react-native-masonry-list": "^2.16.2",

@@ -1,7 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { USER_TOKEN } from '../../utils/helpers/storage';
-import { ENDPOINTS } from '../../utils/api/apiEndpoints';
-import { axiosClient } from '../../utils/network/axiosClient';
+import authApi from '../../utils/api/AuthApi';
 
 // Login thunk
 export const loginUser = createAsyncThunk(
@@ -9,7 +8,7 @@ export const loginUser = createAsyncThunk(
   async credentials => {
     try {
       console.log({ credentials });
-      const response = await axiosClient.post(ENDPOINTS.login, credentials);
+      const response = await authApi.login(credentials);
 
       console.log({ response });
 
@@ -31,7 +30,7 @@ export const restoreSession = createAsyncThunk(
       const credentials = JSON.parse(data);
       console.log({ credentials });
       if (credentials?.email) {
-        loginUser(credentials);
+        dispatch(loginUser(credentials));
 
       } else {
         throw new Error('No token found');

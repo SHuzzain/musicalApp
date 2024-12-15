@@ -7,6 +7,9 @@ const authApi = {
     login: async (data) => {
         return await axiosClient.post('auth/login', data);
     },
+    getAllUsers: async () => {
+        return await axiosClient.get('auth/users');
+    },
     updateById: async (id, data) => {
         return await axiosClient.put(`auth/update/${id}`, data);
     },

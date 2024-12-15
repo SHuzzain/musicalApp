@@ -1,8 +1,8 @@
-import {View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import React from 'react';
 import Button from '../../components/Button/button';
-import {logoutThunk} from '../../redux/actions/authActions';
-import {useDispatch} from 'react-redux';
+import { logoutThunk } from '../../redux/actions/authActions';
+import { useDispatch } from 'react-redux';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();

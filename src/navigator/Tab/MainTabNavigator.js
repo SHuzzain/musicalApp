@@ -10,6 +10,7 @@ import RegisterScreen from '../../screens/Auth/RegisterScreen';
 import EventScreen from '../../screens/Event/EventScreen';
 import HomeScreen from '../../screens/Home/HomeScreen';
 import GalleryScreen from '../../screens/Gallery/GalleryScreen';
+import { useTabScreenListeners } from '../../utils/hooks';
 
 const Tab = createBottomTabNavigator();
 
@@ -36,6 +37,7 @@ const eventTab = props => (
 );
 
 const MainTabNavigator = () => {
+  const navigationListeners = useTabScreenListeners({ newEvent: true });
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -66,10 +68,14 @@ const MainTabNavigator = () => {
       <Tab.Screen
         name={ROUTES.NEW_EVENT_TAB}
         component={EventScreen}
+        initialParams={{
+          newEvent: true,
+        }}
         options={{
           tabBarLabel: ROUTES.NEW_EVENT,
           tabBarButton: eventTab,
         }}
+        listeners={navigationListeners}
       />
 
       <Tab.Screen

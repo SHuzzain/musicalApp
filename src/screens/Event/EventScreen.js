@@ -1,5 +1,5 @@
 import { Text, StyleSheet, ScrollView, TouchableOpacity, Image, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { colors } from '../../styles/color';
@@ -8,14 +8,55 @@ import { Controller, FormProvider, useForm } from 'react-hook-form';
 import DatePicker from 'react-native-date-picker';
 import moment from 'moment';
 import Button from '../../components/Button/button';
+import { useSelector } from 'react-redux';
+import { getAuth } from '../../redux/slice/authSlice';
+import eventApi from '../../utils/api/EventApi';
+import { useNavigation } from '@react-navigation/native';
+import { ROUTES } from '../../utils/constants';
+import { IMAGE_API_BASE_URL } from '../../utils/api/apiEndpoints';
 
-const EventScreen = () => {
-    const [imageData, setImageData] = useState(null);
-    const form = useForm();
-    const [date, setDate] = useState(new Date());
+const EventScreen = ({ route }) => {
+    const { params } = route;
     const [open, setOpen] = useState(false);
 
-    const pickImage = () => {
+    const user = useSelector(getAuth);
+    const navigation = useNavigation();
+
+    const form = useForm({
+        defaultValues: {
+            eventDate: new Date(),
+        },
+        shouldUnregister: false,
+    });
+
+    const eventInfo = useMemo(() => ({
+        buttonText: params?.newEvent ? 'Create' : 'Update',
+        isEdit: !params?.newEvent,
+    }), [params]);
+
+    console.log({ params });
+    useEffect(() => {
+        if (eventInfo?.isEdit) {
+            Object.entries(params).forEach(([key, value]) => {
+                if (key === 'eventDate') {
+                    const dateObject = moment(value).toDate();
+                    form.setValue(key, dateObject);
+                } else if (key === 'imagePath') {
+                    const img = {
+                        uri: IMAGE_API_BASE_URL.concat(value),
+                    };
+                    form.setValue(key, img);
+                } else {
+                    form.setValue(key, value);
+                }
+            });
+        } else {
+            form.reset();
+        }
+        return () => form.reset();
+    }, [params, form, eventInfo]);
+
+    const pickImage = (onChange) => {
         launchImageLibrary({ mediaType: 'photo' }, (response) => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
@@ -24,34 +65,71 @@ const EventScreen = () => {
             } else {
                 const asset = response.assets?.[0];
                 if (asset) {
-                    setImageData(asset); // Save the image data
+                    onChange(asset);
                 }
             }
         });
     };
 
-    const onSubmit = () => {
+    const onSubmit = async (eventData) => {
+        try {
+            const formattedDate = moment(eventData.eventDate).format('YYYY-MM-DD HH:mm:ss');
+            console.log({ formattedDate });
+            const formData = new FormData();
+            formData.append('username', user?.username);
+            formData.append('eventName', eventData.eventName);
+            formData.append('eventDate', formattedDate);
+            formData.append('eventUrl', eventData.eventUrl);
+            if (eventData.imagePath.type) {
+                formData.append('imagePath', {
+                    uri: eventData.imagePath.uri,
+                    name: eventData.imagePath.fileName,
+                    type: eventData.imagePath.type,
+                });
+            }
 
-    }
+            if (eventInfo.isEdit) {
+                await eventApi.update(params.eventId, formData);
+            } else {
+                await eventApi.create(formData);
+            }
+            navigation.navigate(ROUTES.GALLERY_TAB, {
+                reload: Date.now(),
+            });
+        } catch (error) {
+            console.log(error);
+        }
 
+    };
     return (
         <ScrollView style={styles.container}>
-            {imageData ?
-                <View style={styles.imageContainer}>
-                    <Image
-                        style={styles.image}
-                        source={{ uri: imageData.uri }}
-                    />
-                    <Icon name="close-circle" style={styles.close} size={30} color={colors.primary} onPress={() => setImageData(null)} />
-                </View>
-                :
-                <TouchableOpacity activeOpacity={0.8} style={styles.imageUpload} onPress={pickImage}>
-                    <Icon name="add-circle-outline" size={36} />
-                    <Text>
-                        Upload Image
-                    </Text>
-                </TouchableOpacity>
-            }
+            <Controller
+                control={form.control}
+                name="imagePath"
+                rules={{ required: true }}
+                render={({ field: { onChange, value } }) => (
+                    value ?
+                        <View style={styles.imageContainer
+                        } >
+                            <Image
+                                style={styles.image}
+                                source={{ uri: value?.uri }}
+                            />
+                            <Icon name="close-circle" style={styles.close} size={30} color={colors.primary} onPress={() => onChange(null)} />
+                        </View>
+                        :
+                        <TouchableOpacity activeOpacity={0.8} style={styles.imageUpload} onPress={() => {
+                            pickImage(onChange);
+                        }}>
+                            <Icon name="add-circle-outline" size={36} />
+                            <Text>
+                                Upload Image
+                            </Text>
+                        </TouchableOpacity>
+
+                )}
+            />
+
             <FormProvider {...form}>
                 <View style={styles.inputWrapper}>
                     <CustomInput name={'eventName'} text={'Title'} required />
@@ -69,19 +147,20 @@ const EventScreen = () => {
                                     style={styles.input}
                                 >
                                     <Text>
-                                        {moment(value).format('YYYY/MM/DD')}
+                                        {value ? moment(value).format('YYYY/MM/DD') : 'YYYY/MM/DD'}
                                     </Text>
                                 </TouchableOpacity>
 
                                 <DatePicker
                                     modal
                                     open={open}
-                                    date={date}
+                                    date={value}
                                     mode="date"
                                     onConfirm={(selectedDate) => {
                                         setOpen(false);
                                         onChange(selectedDate);
                                     }}
+
                                     onCancel={() => setOpen(false)}
                                 />
                             </>
@@ -93,7 +172,7 @@ const EventScreen = () => {
                     <Button
                         style={styles.button}
                         textStyle={styles.buttonText}
-                        title="Login"
+                        title={eventInfo.buttonText}
                         onPress={form.handleSubmit(onSubmit)}
                     />
                 </View>
